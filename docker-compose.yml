@@ -1,0 +1,48 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: rag_chatbot_postgres
+    environment:
+      POSTGRES_DB: rag_chatbot
+      POSTGRES_USER: rag_user
+      POSTGRES_PASSWORD: rag_password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rag_user -d rag_chatbot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: rag_chatbot_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@rag.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  chatbot:
+    build: .
+    container_name: rag_chatbot_app
+    volumes:
+      - .:/app
+    ports:
+      - "5099:5099"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local

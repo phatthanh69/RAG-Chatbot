@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VnEmisoft BAS - AI Document Assistant</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.3.0/marked.min.js"></script>
+</head>
+
+<body>
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-logo">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>VnEmisoft BAS</h1>
+                    <span>AI Document Assistant</span>
+                </div>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="#dashboard" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#documents" class="nav-link">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Documents</span>
+                </a>
+                <a href="#chat" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Chat</span>
+                </a>
+                <a href="#analytics" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn-secondary" id="helpBtn">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help</span>
+                </button>
+                <div class="user-profile">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="dashboard-section active">
+            <div class="section-header">
+                <h2>Dashboard</h2>
+                <p>Manage your documents and AI interactions</p>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-upload"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalFiles">0</h3>
+                        <p>Total Documents</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="processedFiles">0</h3>
+                        <p>Processed</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="chatSessions">0</h3>
+                        <p>Chat Sessions</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="totalChunks">0</h3>
+                        <p>Data Chunks</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="actions-grid">
+                    <button class="action-card" id="uploadBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h4>Upload Documents</h4>
+                        <p>Add PDF, DOCX files for AI processing</p>
+                    </button>
+                    
+                    <button class="action-card" id="processBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h4>Process Documents</h4>
+                        <p>Generate embeddings and prepare for AI</p>
+                    </button>
+                    
+                    <button class="action-card" id="chatBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h4>Start Chat</h4>
+                        <p>Ask questions about your documents</p>
+                    </button>
+                    
+                    <button class="action-card" id="filesBtn">
+                        <div class="action-icon">
+                            <i class="fas fa-list"></i>
+                        </div>
+                        <h4>View Files</h4>
+                        <p>Browse and manage your documents</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documents Section -->
+        <section id="documents" class="documents-section">
+            <div class="section-header">
+                <h2>Document Management</h2>
+                <p>Upload, process, and organize your documents</p>
+            </div>
+            <!-- Upload Area -->
+            <div class="upload-section">
+                <div class="upload-area locked" id="uploadArea">
+                    <input type="file" id="fileInput" multiple accept=".pdf,.docx" disabled>
+                    <div class="upload-content locked-content">
+                        <div class="upload-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <h3>Document Management</h3>
+                        <p>Enter passcode to unlock document management features</p>
+                        <button class="btn-primary" id="unlockUploadBtn">
+                            <i class="fas fa-key"></i>
+                            Unlock Document Management
+                        </button>
+                    </div>
+                    <div class="upload-content unlocked-content" style="display: none;">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Upload Documents</h3>
+                        <p>Drag and drop your PDF or DOCX files here, or click to browse</p>
+                        <button class="btn-primary" id="chooseFilesBtn">
+                            Choose Files
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="uploadStatus" class="status-message"></div>
+                
+                <div class="upload-actions">
+                    <button id="processAllBtn" class="btn-primary">
+                        <i class="fas fa-play"></i>
+                        Process All Documents
+                    </button>
+                    <button id="refreshFilesBtn" class="btn-secondary">
+                        <i class="fas fa-sync"></i>
+                        Refresh
+                    </button>
+                    <button id="debugApiBtn" class="btn-secondary">
+                        <i class="fas fa-bug"></i>
+                        Debug API
+                    </button>
+                </div>
+
+                <!-- Data Management Section -->
+                <div class="data-management-section">
+                    <div class="section-subheader">
+                        <h3>🗂️ Data Management</h3>
+                        <p class="section-subtitle">Manage your stored data and free up space</p>
+                    </div>
+                    
+                    <div class="data-management-grid">
+                        <div class="data-action-card">
+                            <div class="action-icon warning">
+                                <i class="fas fa-file-upload"></i>
+                            </div>
+                            <div class="action-content">
+                                <h4>Raw Files</h4>
+                                <p>Unprocessed uploaded documents</p>
+                                <button id="deleteRawBtn" class="btn-warning action-btn">
+                                    <i class="fas fa-trash"></i>
+                                    <span>Delete Raw Files</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="data-action-card">
+                            <div class="action-icon warning">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="action-content">
+                                <h4>Processed Files</h4>
+                                <p>Documents with generated chunks</p>
+                                <button id="deleteProcessedBtn" class="btn-warning action-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                    <span>Delete Processed</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="data-action-card">
+                            <div class="action-icon warning">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="action-content">
+                                <h4>AI Embeddings</h4>
+                                <p>Vector embeddings for search</p>
+                                <button id="deleteEmbeddingsBtn" class="btn-warning action-btn">
+                                    <i class="fas fa-vector-square"></i>
+                                    <span>Delete Embeddings</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="data-action-card danger">
+                            <div class="action-icon danger">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="action-content">
+                                <h4>All Data</h4>
+                                <p>Complete system reset</p>
+                                <button id="deleteAllDataBtn" class="btn-danger action-btn">
+                                    <i class="fas fa-bomb"></i>
+                                    <span>Delete Everything</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-management-info">
+                        <div class="info-card">
+                            <i class="fas fa-info-circle"></i>
+                            <div class="info-content">
+                                <h5>Data Management Tips</h5>
+                                <ul>
+                                    <li><strong>Raw Files:</strong> Safe to delete after processing</li>
+                                    <li><strong>Processed Files:</strong> Keep chunks but remove embeddings</li>
+                                    <li><strong>Embeddings:</strong> Can be regenerated from processed files</li>
+                                    <li><strong>All Data:</strong> ⚠️ Complete reset - use with caution!</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File List -->
+            <div class="files-section">
+                <div class="section-subheader">
+                    <h3>Document Library</h3>
+                    <div class="view-controls">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="filesContainer" class="files-container">
+                    <!-- Files will be populated here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat" class="chat-section">
+            <div class="section-header">
+                <h2>AI Chat Assistant</h2>
+                <p>Ask questions about your documents and get intelligent answers</p>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <div class="message bot-message">
+                            <div class="message-avatar">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <span class="message-sender">AI Assistant</span>
+                                    <span class="message-time" id="welcomeTime"></span>
+                                </div>
+                                <div class="message-text">
+                                    <h4>Welcome to VnEmisoft BAS AI Assistant! 🤖</h4>
+                                    <p>I'm here to help you with your documents. I can:</p>
+                                    <ul>
+                                        <li>Answer questions about uploaded documents</li>
+                                        <li>Search through PDF and DOCX files</li>
+                                        <li>Provide detailed analysis and summaries</li>
+                                        <li>Help with technical documentation</li>
+                                    </ul>
+                                    <p><strong>Ready to get started? Ask me anything about your documents!</strong></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span>AI is thinking...</span>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <input type="text" id="chatInput" class="chat-input" 
+                               placeholder="Ask me about your documents..." maxlength="500">
+                        <button id="sendButton" class="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="chat-actions">
+                        <button id="clearChatBtn" class="btn-secondary small">
+                            <i class="fas fa-trash"></i>
+                            Clear Chat
+                        </button>
+                        <button id="searchModeBtn" class="btn-secondary small">
+                            <i class="fas fa-search"></i>
+                            Search Mode
+                        </button>
+                        <button id="toggleSourcesBtn" class="btn-secondary small active">
+                            <i class="fas fa-file-text"></i>
+                            Show Sources
+                        </button>
+                        <button id="exportChatBtn" class="btn-secondary small">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analytics Section -->
+        <section id="analytics" class="analytics-section">
+            <div class="section-header">
+                <h2>Analytics & Insights</h2>
+                <p>Monitor your document processing and AI usage</p>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="analytics-card">
+                    <h3>Document Processing</h3>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-pie"></i>
+                        <p>Processing statistics will appear here</p>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>Chat Activity</h3>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-line"></i>
+                        <p>Chat activity metrics will appear here</p>
+                    </div>
+                </div>
+                
+                <div class="analytics-card">
+                    <h3>Popular Topics</h3>
+                    <div class="chart-placeholder">
+                        <i class="fas fa-chart-bar"></i>
+                        <p>Most asked questions will appear here</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- File List Modal -->
+    <div id="fileListModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Document Library</h3>
+                <button class="modal-close" onclick="closeFileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="fileListContent">
+                <!-- File list will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h3 id="loadingText">Processing...</h3>
+            <p id="loadingSubtext">Please wait while we handle your request</p>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Help & Documentation</h3>
+                <button class="modal-close" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="help-content">
+                    <h4>Getting Started</h4>
+                    <ol>
+                        <li><strong>Upload Documents:</strong> Drag and drop PDF or DOCX files into the upload area</li>
+                        <li><strong>Process Documents:</strong> Click "Process All Documents" to generate AI-ready embeddings</li>
+                        <li><strong>Start Chatting:</strong> Ask questions about your documents in the chat interface</li>
+                    </ol>
+                    
+                    <h4>Supported Formats</h4>
+                    <ul>
+                        <li>PDF files (.pdf)</li>
+                        <li>Microsoft Word documents (.docx)</li>
+                    </ul>
+                    
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Intelligent document search and retrieval</li>
+                        <li>AI-powered question answering</li>
+                        <li>Multi-document analysis</li>
+                        <li>Real-time chat interface</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Passcode Modal -->
+    <div id="passcodeModal" class="modal passcode-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🔐 Enter Document Management Passcode</h3>
+                <button class="modal-close" onclick="window.chatbotAppInstance.closePasscodeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="passcode-content">
+                    <div class="passcode-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <p>Document Management features are protected. Please enter the passcode to unlock upload, delete, and data management operations.</p>
+                    
+                    <div class="passcode-input-container">
+                        <input type="password" id="passcodeInput" class="passcode-input" 
+                               placeholder="Enter passcode..." maxlength="20" autocomplete="off">
+                        <button class="btn-primary" id="submitPasscodeBtn">
+                            <i class="fas fa-unlock"></i>
+                            Unlock
+                        </button>
+                    </div>
+                    
+                    <div class="passcode-error" id="passcodeError" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Incorrect passcode. Please try again.</span>
+                    </div>
+                    
+                    <div class="passcode-attempts" id="passcodeAttempts">
+                        Attempts remaining: <span id="attemptsCount">3</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

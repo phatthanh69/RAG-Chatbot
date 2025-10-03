@@ -1,0 +1,118 @@
+# Python caches & builds
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+pip-wheel-metadata/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.cache/
+.pylint.d/
+.pyre/
+.pytype/
+.dmypy.json
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment & secret configs
+.env
+.env.*
+!.env.example
+config.env
+config.env.*
+!config.env.example
+*.env.local
+*.env.development
+*.env.production
+*.env.test
+*.key
+*.pem
+
+# IDE / editor settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node / frontend artefacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Logs
+*.log
+logs/
+
+# Test helpers & scratch scripts
+test_*.py
+debug_*.py
+*_test.py
+*_debug.py
+
+# Generated chat sessions / graph exports
+chat_sessions/
+Graph_RAG/
+TEST_GRAPH/
+graph.html
+
+# Data dumps (regenerated locally)
+data/processed/
+data/uploads/
+data/qa_samples/
+data/tmp/
+data/raw/
+
+# Backup or temporary artefacts
+backups/
+*.bak
+*.tmp
+*.temp
+*.orig
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Github
+.github
+
+# Local test files
+TEST_CHATBOT/
