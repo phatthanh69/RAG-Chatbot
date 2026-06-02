@@ -20,28 +20,28 @@ try:
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
-    from src.enhanced_chat import (
+    from ragbot.chat.rag_engine import (
         EnhancedRAGChatbot,
         RetrievalResult,
         generate_answer,
         retrieve,
     )
-    from src.llm.api import init_genai_client
+    from ragbot.llm.client import init_genai_client
 
 except ImportError as e:
     # Fallback to sys.path manipulation
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-    from src.enhanced_chat import (
+    from ragbot.chat.rag_engine import (
         retrieve,
         generate_answer,
         RetrievalResult,
         EnhancedRAGChatbot,
     )
-    from src.llm.api import init_genai_client
+    from ragbot.llm.client import init_genai_client
 
-from app.services.database_service import DatabaseService
-from app.services.ensemble_retriever_service import EnsembleRetrieverService
-from app.services.vector_search_service import VectorSearchService
+from ragbot.db.database_service import DatabaseService
+from ragbot.retrieval.ensemble import EnsembleRetrieverService
+from ragbot.retrieval.vector_search import VectorSearchService
 
 
 class ChatbotService:
@@ -238,7 +238,7 @@ class ChatbotService:
             return self.heading_context_cache
 
         try:
-            from app.services.database_service import DatabaseService
+            from ragbot.db.database_service import DatabaseService
 
             ctx = DatabaseService.get_heading_context(limit=limit)
             headings = ctx.get("headings", []) or []
@@ -883,10 +883,10 @@ CHỈ TRẢ VỀ JSON, KHÔNG THÊM VĂN BẢN KHÁC.
 
             # Perform similarity check using database
             # Import VectorSearchService
-            from app.services.vector_search_service import VectorSearchService
+            from ragbot.retrieval.vector_search import VectorSearchService
 
             # Import embed_query function
-            from src.enhanced_chat import embed_query
+            from ragbot.chat.rag_engine import embed_query
 
             # Tạo embedding cho câu hỏi
             query_embedding = embed_query(client, question)
@@ -1617,7 +1617,7 @@ Có vẻ như câu hỏi của bạn nằm ngoài lĩnh vực chuyên môn của
                 return False
 
             # Query database for Q&A documents
-            from app.models.document import DocumentChunk
+            from ragbot.models.document import DocumentChunk
 
             # Look for document chunks that might be Q&A data
             # Use proper string comparison instead of LIKE on JSON columns
@@ -1757,7 +1757,7 @@ Có vẻ như câu hỏi của bạn nằm ngoài lĩnh vực chuyên môn của
         Returns the raw result string from the GraphCypherQAChain or None on error.
         """
         try:
-            from app.services.graph_rag_service import OptimizedGraphRAGService
+            from ragbot.retrieval.graph_rag_service import OptimizedGraphRAGService
 
             # Validate session parameter
             if session is None:
@@ -1785,7 +1785,7 @@ Có vẻ như câu hỏi của bạn nằm ngoài lĩnh vực chuyên môn của
         try:
             # Use the same embedding service as documents to ensure compatibility
             sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-            from src.embedder import embed_single_text, get_embedding_vector
+            from ragbot.ingestion.embedder import embed_single_text, get_embedding_vector
 
             # Initialize Google AI client and generate embedding
             client = self._get_genai_client()
