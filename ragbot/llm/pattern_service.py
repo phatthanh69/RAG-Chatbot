@@ -11,10 +11,10 @@ import re
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from app.core.extensions import db
-from app.models.model_pattern import ModelPattern
-from src.enhanced_chat import generate_answer
-from src.llm.api import init_genai_client
+from ragbot.models.base import db
+from ragbot.models.model_pattern import ModelPattern
+from ragbot.chat.rag_engine import generate_answer
+from ragbot.llm.client import init_genai_client
 
 VIETNAM_TIMEZONE = timezone(timedelta(hours=7))
 
