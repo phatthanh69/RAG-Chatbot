@@ -9,9 +9,9 @@ from pathlib import Path
 
 from flask import Flask
 
-from app.api.routes import register_blueprints
-from app.core.config import Config
-from app.core.extensions import init_extensions
+from ragbot.api import register_blueprints
+from ragbot.config import Config
+from ragbot.extensions import init_extensions
 
 
 logger = logging.getLogger(__name__)
