@@ -9,7 +9,7 @@ from datetime import datetime, timedelta, timezone
 from sqlalchemy import Boolean, Column, DateTime, Float, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 
-from app.models.base import db
+from ragbot.models.base import db
 
 # Vietnam timezone
 VIETNAM_TIMEZONE = timezone(timedelta(hours=7))

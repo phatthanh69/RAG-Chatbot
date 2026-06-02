@@ -8,7 +8,7 @@ from typing import List, Optional
 from sqlalchemy import JSON, Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
 
-from app.models.base import db
+from ragbot.models.base import db
 
 # Timezone configuration for Vietnam (UTC+7)
 VIETNAM_TIMEZONE = timezone(timedelta(hours=7))
