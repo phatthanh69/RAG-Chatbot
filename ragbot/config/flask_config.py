@@ -105,7 +105,7 @@ class TestingConfig(Config):
 
 
 # Configuration mapping
-config = {
+_CONFIG_MAP = {
     "development": DevelopmentConfig,
     "production": ProductionConfig,
     "testing": TestingConfig,
@@ -116,4 +116,4 @@ config = {
 def get_config():
     """Get configuration based on environment"""
     env = os.getenv("FLASK_ENV", "development")
-    return config.get(env, config["default"])
+    return _CONFIG_MAP.get(env, _CONFIG_MAP["default"])
