@@ -10,9 +10,9 @@ import sys
 project_root = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, project_root)
 
-from app import create_app
-from app.models.model_pattern import ModelPattern
-from app.services.model_pattern_service import ModelPatternAnalysisService
+from ragbot.app import create_app
+from ragbot.models.model_pattern import ModelPattern
+from ragbot.llm.pattern_service import ModelPatternAnalysisService
 
 
 def populate_and_test_llm_patterns():
@@ -71,7 +71,7 @@ def populate_and_test_llm_patterns():
             print(f"\n4. Testing chatbot service integration:")
             print("-" * 40)
 
-            from app.services.chatbot_service import ChatbotService
+            from ragbot.chat.orchestrator import ChatbotService
 
             chatbot = ChatbotService()
 

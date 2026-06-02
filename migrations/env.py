@@ -8,8 +8,8 @@ from sqlalchemy import engine_from_config, pool
 # Add the parent directory to sys.path to import app modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app import create_app
-from app.models.base import db
+from ragbot.app import create_app
+from ragbot.models.base import db
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

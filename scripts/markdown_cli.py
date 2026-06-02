@@ -13,7 +13,7 @@ from typing import Any, Dict
 # Add current directory to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from enhanced_markdown_service import EnhancedMarkdownDocumentService
+from ragbot.ingestion.markdown_service import EnhancedMarkdownDocumentService
 
 
 def setup_logging(verbose: bool = False) -> None:

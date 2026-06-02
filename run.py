@@ -12,8 +12,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from app import create_app
-from app.core.config import get_config
+from ragbot.app import create_app
+from ragbot.config import get_config
 
 
 # Configure logging

@@ -12,9 +12,9 @@ import logging
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from app.models.base import db
-from app.core.config import Config
-from app import create_app
+from ragbot.models.base import db
+from ragbot.config import Config
+from ragbot.app import create_app
 
 
 def setup_database():
@@ -70,8 +70,8 @@ def show_database_info():
     with app.app_context():
         try:
             # Get table information
-            from app.models.document import Document, DocumentChunk
-            from app.models.chat import ChatSession, ChatMessage
+            from ragbot.models.document import Document, DocumentChunk
+            from ragbot.models.chat import ChatSession, ChatMessage
 
             tables = [
                 ('Documents', Document.__tablename__, Document.query.count()),
