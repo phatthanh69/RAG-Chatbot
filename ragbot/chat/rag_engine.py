@@ -10,9 +10,9 @@ from dataclasses import dataclass
 from datetime import timedelta, timezone
 from typing import Any, Dict, List, Optional
 
-from src.llm.api import init_genai_client
-from src.simple_vector_store import SimpleVectorStore
-from src.utils.calculations import cosine_similarity
+from ragbot.llm.client import init_genai_client
+from ragbot.retrieval.simple_vector_store import SimpleVectorStore
+from ragbot.utils.calculations import cosine_similarity
 
 
 # Timezone configuration for Vietnam (UTC+7)
@@ -82,7 +82,7 @@ def load_store(embedded_jsonl_path: str) -> SimpleVectorStore:
 
 def embed_query(client: Any, text: str) -> List[float]:
     # Import configuration (try package path first, then fallback)
-    from src.config import config
+    from ragbot.config import config
 
     # Use RETRIEVAL_QUERY for query embeddings to match with RETRIEVAL_DOCUMENT
     query_config = {
@@ -216,7 +216,7 @@ def generate_answer(
     # logger.info(f"Prompt sent to LLM: {prompt}")
 
     # Import configuration (try package path first, then fallback)
-    from src.config import config
+    from ragbot.config import config
 
     if max_retries is None:
         max_retries = config.MAX_RETRIES
@@ -330,7 +330,7 @@ def retrieve(
     if use_metadata_ranking:
         try:
             logging.debug("Attempting to import metadata_ranker...")
-            from src.metadata_ranker import create_smart_ranker  # type: ignore[import-not-found]
+            from ragbot.retrieval.metadata_ranker import create_smart_ranker  # type: ignore[import-not-found]
 
             logging.debug("Successfully imported create_smart_ranker")
 
@@ -396,7 +396,7 @@ def retrieve(
     if use_metadata_ranking and out:
         try:
             logging.debug("Attempting to import metadata_ranker...")
-            from src.metadata_ranker import create_smart_ranker  # type: ignore[import-not-found]
+            from ragbot.retrieval.metadata_ranker import create_smart_ranker  # type: ignore[import-not-found]
 
             logging.debug("Successfully imported create_smart_ranker")
 
@@ -561,7 +561,7 @@ class ChatSession:
     def save_session(self, save_dir: Optional[str] = None):
         """Lưu phiên trò chuyện"""
         # Import configuration
-        from src.config import paths
+        from ragbot.config import paths
 
         if save_dir is None:
             save_dir = str(paths.CHAT_SESSIONS_DIR)
@@ -641,7 +641,7 @@ class EnhancedRAGChatbot:
     # Calling _load_qa_embeddings() is no longer necessary
 
         # Import configuration
-        from src.config import config
+        from ragbot.config import config
 
         self.config = {
             "top_k": config.DEFAULT_TOP_K,
@@ -688,7 +688,7 @@ class EnhancedRAGChatbot:
 
         try:
             # Import VectorSearchService
-            from app.services.vector_search_service import VectorSearchService
+            from ragbot.retrieval.vector_search import VectorSearchService
 
             # Tạo embedding cho câu hỏi
             query_embedding = embed_query(self.client, question)
