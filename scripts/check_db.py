@@ -4,8 +4,8 @@
 Check database tables and model_patterns data
 """
 
-from app import create_app
-from app.core.extensions import db
+from ragbot.app import create_app
+from ragbot.extensions import db
 
 app = create_app()
 

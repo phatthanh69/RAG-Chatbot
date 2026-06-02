@@ -12,9 +12,9 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from app import create_app
-from app.models.base import db
-from app.services.database_service import DatabaseService
+from ragbot.app import create_app
+from ragbot.models.base import db
+from ragbot.db.database_service import DatabaseService
 
 
 def import_qa_data():
