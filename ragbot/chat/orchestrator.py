@@ -42,6 +42,8 @@ except ImportError as e:
 from ragbot.db.database_service import DatabaseService
 from ragbot.retrieval.ensemble import EnsembleRetrieverService
 from ragbot.retrieval.vector_search import VectorSearchService
+from ragbot.utils.text import dedupe_preserve_order as _dedupe
+from ragbot.utils.text import normalize_text as _normalize_text
 
 
 class ChatbotService:
@@ -49,38 +51,11 @@ class ChatbotService:
 
     @staticmethod
     def normalize_text(s: str) -> str:
-        """Normalize text by lowercasing, removing extra spaces, and handling common plurals."""
-        if not s:
-            return ""
-        text = " ".join(s.lower().split())
-        # Simple plural normalization
-        plural_map = {
-            "lasers": "laser",
-            "sensors": "sensor",
-            "cảm biến": "cảm biến",  # already singular
-            "thiết bị": "thiết bị",
-            "hệ thống": "hệ thống",
-            "trạm": "trạm",
-            "máy": "máy",
-        }
-        for plural, singular in plural_map.items():
-            text = text.replace(plural, singular)
-        return text
+        return _normalize_text(s)
 
     @staticmethod
-    @staticmethod
     def dedupe_preserve_order(items):
-        """Deduplicate list while preserving order."""
-        seen = set()
-        out = []
-        for it in items:
-            if not it:
-                continue
-            key = " ".join(str(it).split())
-            if key.lower() not in seen:
-                seen.add(key.lower())
-                out.append(key)
-        return out
+        return _dedupe(items)
 
     # === Logging Utility Methods ===
     def _log_process_step(self, step: str, details: str = "", session_id: str = ""):
