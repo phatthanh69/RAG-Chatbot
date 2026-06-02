@@ -9,8 +9,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
-from src.cleaner import normalize_text
-from src.config import config
+from ragbot.ingestion.cleaner import normalize_text
+from ragbot.config import config
 
 
 @dataclass

@@ -89,7 +89,7 @@ def load_jsonl_file(file_path: Path) -> List[str]:
 def save_processed_data(documents: List[str], output_dir: Optional[str] = None):
     """Lưu trữ kết quả đã xử lý"""
     if output_dir is None:
-        from src.config import paths
+        from ragbot.config import paths
 
         output_dir = str(paths.OUTPUT_DIR)
 

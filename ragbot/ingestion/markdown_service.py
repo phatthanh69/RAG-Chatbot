@@ -15,23 +15,23 @@ sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 # Import app services
-from app.services.database_service import DatabaseService
-from app.utils.response_helpers import get_vietnam_time
-from src.cleaner import normalize_text
+from ragbot.db.database_service import DatabaseService
+from ragbot.utils.response_helpers import get_vietnam_time
+from ragbot.ingestion.cleaner import normalize_text
 
 # Import existing modules from src
-from src.embedder import (
+from ragbot.ingestion.embedder import (
     create_embeddings,
     init_genai_client,
 )
-from src.markdown_extractor import (
+from ragbot.ingestion.markdown_extractor import (
     chunk_markdown_blocks,
     extract_markdown_blocks,
 )
 
 # Import BM25Service for tokenization
 try:
-    from app.services.bm25_service import BM25Service as _BM25Service
+    from ragbot.retrieval.bm25 import BM25Service as _BM25Service
 except ImportError:  # pragma: no cover - optional dependency
     _BM25Service = None
 

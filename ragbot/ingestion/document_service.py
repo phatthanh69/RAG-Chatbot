@@ -15,15 +15,15 @@ from typing import Any, Dict, List, Optional
 # Add src to path to import existing modules
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from app.services.database_service import DatabaseService
-from app.services.model_pattern_service import ModelPatternAnalysisService
-from app.utils.response_helpers import get_vietnam_time
-from src import chunker, cleaner, embedder, extractor
+from ragbot.db.database_service import DatabaseService
+from ragbot.llm.pattern_service import ModelPatternAnalysisService
+from ragbot.utils.response_helpers import get_vietnam_time
+from ragbot.ingestion import chunker, cleaner, embedder, extractor
 
 # Import Enhanced Markdown Service
 try:
     sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-    from enhanced_markdown_service import EnhancedMarkdownDocumentService
+    from ragbot.ingestion.markdown_service import EnhancedMarkdownDocumentService
 
     MARKDOWN_SERVICE_AVAILABLE = True
 except ImportError:
@@ -32,7 +32,7 @@ except ImportError:
 
 # Import BM25Service for tokenization
 try:
-    from app.services.bm25_service import BM25Service
+    from ragbot.retrieval.bm25 import BM25Service
 
     BM25_AVAILABLE = True
 except ImportError:
@@ -665,7 +665,7 @@ class DocumentService:
 
                     if file_ext in [".md", ".markdown"] and MARKDOWN_SERVICE_AVAILABLE:
                         # Use Markdown extractor for .md files
-                        from src.markdown_extractor import extract_markdown_blocks
+                        from ragbot.ingestion.markdown_extractor import extract_markdown_blocks
 
                         blocks = extract_markdown_blocks(file_path)
 

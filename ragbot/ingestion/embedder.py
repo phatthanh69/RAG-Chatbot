@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 from dotenv import load_dotenv
 from google import genai
 
-from src.llm.api import init_genai_client
+from ragbot.llm.client import init_genai_client
 
 # Load environment variables
 load_dotenv()
