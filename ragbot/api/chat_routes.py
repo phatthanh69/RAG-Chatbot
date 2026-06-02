@@ -10,11 +10,11 @@ from pathlib import Path
 
 from flask import Blueprint, current_app, jsonify, request, session
 
-from app.core.extensions import get_chatbot_service
-from app.services.chatbot_service import ChatbotService
-from app.services.database_service import DatabaseService
-from app.services.vector_search_service import VectorSearchService
-from app.utils.response_helpers import error_response, success_response
+from ragbot.extensions import get_chatbot_service
+from ragbot.chat.orchestrator import ChatbotService
+from ragbot.db.database_service import DatabaseService
+from ragbot.retrieval.vector_search import VectorSearchService
+from ragbot.utils.response_helpers import error_response, success_response
 
 chatbot_bp = Blueprint("chatbot", __name__)
 
