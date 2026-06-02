@@ -3,7 +3,7 @@ import math
 from pathlib import Path
 from typing import Any, Dict, List, Sequence, Tuple
 
-from src.utils.calculations import cosine_similarity
+from ragbot.utils.calculations import cosine_similarity
 
 
 class SimpleVectorStore:

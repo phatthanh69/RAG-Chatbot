@@ -21,8 +21,8 @@ from rapidfuzz import process
 project_root = Path(__file__).parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-from src.graph_RAG import GraphRAGService
-from src.llm.api import init_genai_client
+from ragbot.retrieval.graph_rag import GraphRAGService
+from ragbot.llm.client import init_genai_client
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

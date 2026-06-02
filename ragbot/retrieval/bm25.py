@@ -19,8 +19,8 @@ try:
 except ImportError:
     UNDERTHESEA_AVAILABLE = False
 
-from app.models.base import db
-from app.models.document import Document, DocumentChunk
+from ragbot.models.base import db
+from ragbot.models.document import Document, DocumentChunk
 
 
 class BM25Service:

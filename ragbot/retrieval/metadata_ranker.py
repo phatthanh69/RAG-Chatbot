@@ -5,7 +5,7 @@ Enhanced Ranking System using metadata to improve search relevance.
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
-from src.enhanced_chat import RetrievalResult
+from ragbot.chat.rag_engine import RetrievalResult
 
 
 @dataclass
@@ -495,7 +495,7 @@ class MetadataRanker:
         """Filter results using common metadata constraints."""
         filtered = results
 
-    if pdf_filter:
+        if pdf_filter:
             filtered = [
                 r
                 for r in filtered
@@ -518,7 +518,7 @@ class MetadataRanker:
                 and section_filter.lower() in r.meta.get("section", "").lower()
             ]
 
-    return filtered
+        return filtered
 
     def get_ranking_explanation(self, result: RetrievalResult) -> str:
         """Explain why a result received a high rank."""

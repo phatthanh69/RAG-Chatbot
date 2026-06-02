@@ -10,9 +10,9 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 from rapidfuzz import fuzz
 
-from app.models.document import DocumentChunk
-from app.services.bm25_service import BM25Service
-from app.services.vector_search_service import VectorSearchService
+from ragbot.models.document import DocumentChunk
+from ragbot.retrieval.bm25 import BM25Service
+from ragbot.retrieval.vector_search import VectorSearchService
 
 
 class EnsembleRetrieverService:
