@@ -4,9 +4,9 @@ from pathlib import Path
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
-from src.cleaner import normalize_text
-from src.config import config, paths
-from src.extractor import (
+from ragbot.ingestion.cleaner import normalize_text
+from ragbot.config import config, paths
+from ragbot.ingestion.extractor import (
     extract_document_blocks,
     filter_layout_noise,
     get_document_files,
