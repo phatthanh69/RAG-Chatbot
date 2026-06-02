@@ -8,7 +8,7 @@ from datetime import datetime
 import psutil
 from flask import Blueprint, jsonify
 
-from app.utils.response_helpers import get_vietnam_time
+from ragbot.utils.response_helpers import get_vietnam_time
 
 health_bp = Blueprint("health", __name__)
 

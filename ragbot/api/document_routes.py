@@ -10,10 +10,10 @@ from pathlib import Path
 from flask import Blueprint, abort, current_app, request, send_file
 from werkzeug.utils import secure_filename
 
-from app.core.config import Config
-from app.services.database_service import DatabaseService
-from app.services.document_service import DocumentService
-from app.utils.response_helpers import error_response, success_response
+from ragbot.config import Config
+from ragbot.db.database_service import DatabaseService
+from ragbot.ingestion.document_service import DocumentService
+from ragbot.utils.response_helpers import error_response, success_response
 
 document_bp = Blueprint("documents", __name__)
 
@@ -109,7 +109,7 @@ def process_documents():
         )  # Optional: extract patterns from headings
 
         # Create service instance within the request context to ensure proper app context
-        from app.services.document_service import DocumentService
+        from ragbot.ingestion.document_service import DocumentService
 
         service = DocumentService()
 
@@ -215,7 +215,7 @@ def delete_file(filename):
 def delete_document(document_id):
     """Delete a document and all its associated data from the database and filesystem"""
     try:
-        from app.services.database_service import DatabaseService
+        from ragbot.db.database_service import DatabaseService
 
         # Get document details
         document = DatabaseService.get_document_by_id(document_id)
@@ -265,7 +265,7 @@ def delete_document(document_id):
 def delete_raw_files():
     """Delete all raw uploaded files and their database records"""
     try:
-        from app.services.database_service import DatabaseService
+        from ragbot.db.database_service import DatabaseService
 
         # Get all raw documents (not processed)
         raw_documents = DatabaseService.get_documents_by_status("uploaded")
@@ -317,7 +317,7 @@ def delete_raw_files():
 def delete_processed_files():
     """Delete all processed files, embeddings, and their database records"""
     try:
-        from app.services.database_service import DatabaseService
+        from ragbot.db.database_service import DatabaseService
 
         # Get all processed documents
         processed_documents = DatabaseService.get_documents_by_status("completed")
@@ -382,7 +382,7 @@ def delete_processed_files():
 def delete_embeddings():
     """Delete all embeddings/chunks from the database while keeping documents"""
     try:
-        from app.services.database_service import DatabaseService
+        from ragbot.db.database_service import DatabaseService
 
         # Delete all chunks
         chunks_deleted = DatabaseService.delete_all_chunks()
@@ -407,7 +407,7 @@ def delete_embeddings():
 def delete_all_data():
     """Delete all data: files, database records, and embeddings"""
     try:
-        from app.services.database_service import DatabaseService
+        from ragbot.db.database_service import DatabaseService
 
         # Get confirmation from request
         data = request.get_json() or {}
@@ -473,7 +473,7 @@ def delete_all_data():
 def delete_document_embeddings(document_id):
     """Delete embeddings for a specific document while keeping the document"""
     try:
-        from app.services.database_service import DatabaseService
+        from ragbot.db.database_service import DatabaseService
 
         # Check if document exists
         document = DatabaseService.get_document_by_id(document_id)

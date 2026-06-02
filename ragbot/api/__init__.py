@@ -3,9 +3,9 @@ API routes registration
 """
 
 from flask import Blueprint
-from app.api.document_routes import document_bp
-from app.api.chatbot_routes import chatbot_bp
-from app.api.health_routes import health_bp
+from ragbot.api.document_routes import document_bp
+from ragbot.api.chat_routes import chatbot_bp
+from ragbot.api.health_routes import health_bp
 
 
 def register_blueprints(app):

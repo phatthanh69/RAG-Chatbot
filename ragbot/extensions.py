@@ -6,8 +6,8 @@ import logging
 
 from flask_cors import CORS
 
-from app.models.base import db
-from app.services.chatbot_service import ChatbotService
+from ragbot.models.base import db
+from ragbot.chat.orchestrator import ChatbotService
 
 # Global chatbot service instance
 chatbot_service_instance = None
