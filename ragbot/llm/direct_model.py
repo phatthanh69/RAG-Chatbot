@@ -9,7 +9,7 @@ import time
 from typing import List, Dict, Any, Optional
 from rapidfuzz import fuzz
 
-from app.core.extensions import db
+from ragbot.models.base import db
 from sqlalchemy import text
 
 class DirectModelNameService:
