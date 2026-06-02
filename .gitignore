@@ -82,6 +82,10 @@ debug_*.py
 *_test.py
 *_debug.py
 
+# Project pytest suite lives in tests/ and must be tracked
+!tests/
+!tests/**
+
 # Generated chat sessions / graph exports
 chat_sessions/
 Graph_RAG/
