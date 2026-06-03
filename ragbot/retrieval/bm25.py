@@ -7,7 +7,7 @@ import re
 from typing import Any, Dict, List, Optional
 
 import numpy as np
-from langchain.schema import Document as LangchainDocument
+from langchain_core.documents import Document as LangchainDocument
 from langchain_community.retrievers import BM25Retriever
 from rapidfuzz import fuzz
 from sqlalchemy import func, text
