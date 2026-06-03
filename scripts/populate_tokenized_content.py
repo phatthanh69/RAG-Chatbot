@@ -11,8 +11,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from flask import Flask
 
-from app import create_app
-from app.services.bm25_service import BM25Service
+from ragbot.app import create_app
+from ragbot.retrieval.bm25 import BM25Service
 
 
 def populate_tokenized_content():

@@ -36,33 +36,47 @@ The platform targets production scenarios that require explainable answers, cita
 
 ## Architecture & Core Components
 
-### Service-Oriented Layout
-- `app/services/chatbot_service.py` – Conversation orchestration, retrieval, formatting.
-- `app/services/ensemble_retriever_service.py` – Hybrid BM25 + vector fusion.
-- `app/services/model_pattern_service.py` – Gemini-driven pattern extraction.
-- `app/services/database_service.py` – PostgreSQL + pgvector operations.
-- `app/services/document_service.py` & `enhanced_markdown_service.py` – Document ingestion workflows.
+The codebase is organized as a single domain-oriented `ragbot/` package
+(`chat`, `retrieval`, `ingestion`, `llm`, `models`, `db`, `api`, `config`, `utils`).
 
-### Retrieval Pipeline (`src/`)
-- `enhanced_chat.py` – Core RAG logic, retrieval orchestration, prompt builds.
+### Chat Orchestration (`ragbot/chat/`)
+- `orchestrator.py` – `ChatbotService` facade: conversation flow, retrieval, answer assembly.
+- `classification.py` – `QuestionClassifier`: question taxonomy + heading-first analysis.
+- `session.py` – `SessionManager`: session lifecycle and history persistence.
+- `formatting.py` – source normalization for the frontend.
+- `prompt_builder.py` – prompt + recent-context construction.
+- `rag_engine.py` – core RAG logic, retrieval orchestration, prompt builds.
+
+### Retrieval Pipeline (`ragbot/retrieval/`)
+- `ensemble.py` – Hybrid BM25 + vector fusion.
+- `bm25.py`, `vector_search.py` – keyword and vector search services.
 - `simple_vector_store.py` – JSONL-backed vector store (memory-friendly).
-- `chunker.py`, `extractor.py`, `cleaner.py` – PDF/Markdown preprocessing.
 - `metadata_ranker.py` – Section-aware reranking for precise answers.
 
-### Database & Models (`app/models/`)
-- `DocumentChunk`, `ChatSession`, `ChatMessage` for document and conversation storage.
+### Ingestion (`ragbot/ingestion/`)
+- `document_service.py` & `markdown_service.py` – Document ingestion workflows.
+- `chunker.py`, `extractor.py`, `cleaner.py`, `embedder.py` – PDF/Markdown preprocessing.
+
+### LLM Services (`ragbot/llm/`)
+- `client.py` – Gemini (google-genai) client initialization.
+- `pattern_service.py` – Gemini-driven pattern extraction.
+- `direct_model.py` – direct model invocation service.
+
+### Database & Models (`ragbot/db/`, `ragbot/models/`)
+- `db/database_service.py` – PostgreSQL + pgvector operations.
+- `models/` – `DocumentChunk`, `ChatSession`, `ChatMessage` for document and conversation storage.
 - `ModelPattern` for LLM-generated regex patterns with metadata.
 - Q&A tables (`qa_items`, `qa_collections`) powering dedicated knowledge bases.
 
 ### Frontend & API
-- Flask app factory in `app/__init__.py` with blueprint-driven APIs under `/api`.
+- Flask app factory in `ragbot/app.py` with blueprint-driven APIs under `/api` (`ragbot/api/`).
 - Static single-page UI in `static/` for fast prototyping.
 
 ---
 
 ## Configuration & Environment
 
-Configuration is centralized in `src/config` with environment-first utilities.
+Configuration is centralized in `ragbot/config` with environment-first utilities.
 
 ### Environment Files
 
@@ -83,7 +97,7 @@ Key variables:
 ### Config Utilities
 
 ```python
-from src.config import config, paths, ensure_environment_setup
+from ragbot.config import config, paths, ensure_environment_setup
 
 ensure_environment_setup()
 print(paths.DATA_DIR)
@@ -167,8 +181,8 @@ Verification:
 
 ```bash
 python -c "
-from app import create_app
-from app.services.bm25_service import BM25Service
+from ragbot.app import create_app
+from ragbot.retrieval.bm25 import BM25Service
 
 app = create_app()
 with app.app_context():
@@ -207,7 +221,7 @@ Guidelines:
 ### Service Usage
 
 ```python
-from app.services.ensemble_retriever_service import EnsembleRetrieverService
+from ragbot.retrieval.ensemble import EnsembleRetrieverService
 
 ensemble = EnsembleRetrieverService(bm25_weight=0.3, vector_weight=0.7, enable_rrf=True)
 ensemble.initialize()
@@ -225,8 +239,8 @@ Monitoring tips:
 Gemini 2.5 Pro extracts regex patterns from document headings, stores them in PostgreSQL, and exposes them through the chatbot.
 
 ### Key Components
-- `app/models/model_pattern.py` – Pattern schema with confidence & usage metrics.
-- `app/services/model_pattern_service.py` – LLM analysis, validation, caching.
+- `ragbot/models/model_pattern.py` – Pattern schema with confidence & usage metrics.
+- `ragbot/llm/pattern_service.py` – LLM analysis, validation, caching.
 - `populate_llm_patterns.py` – One-shot pattern generation script.
 - `simple_pattern_manager.py` – CLI for inspection and manual refresh.
 
@@ -333,14 +347,14 @@ pip install pandas openpyxl
 
 ```python
 # Inspect first vector-store entry
-from simple_vector_store import SimpleVectorStore
+from ragbot.retrieval.simple_vector_store import SimpleVectorStore
 store = SimpleVectorStore.from_jsonl('your_embedded_file.jsonl')
 print(len(store))
 print(store.items[0].keys() if store.items else 'No items')
 
 # Validate chatbot pattern loading
-from app import create_app
-from app.services.chatbot_service import ChatbotService
+from ragbot.app import create_app
+from ragbot.chat.orchestrator import ChatbotService
 
 app = create_app()
 with app.app_context():
