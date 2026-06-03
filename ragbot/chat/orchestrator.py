@@ -43,6 +43,7 @@ from ragbot.db.database_service import DatabaseService
 from ragbot.retrieval.ensemble import EnsembleRetrieverService
 from ragbot.retrieval.vector_search import VectorSearchService
 from ragbot.chat.classification import QuestionClassifier
+from ragbot.chat.session import SessionManager
 from ragbot.chat.prompt_builder import build_prompt, get_recent_context
 from ragbot.utils.text import dedupe_preserve_order as _dedupe
 from ragbot.utils.text import normalize_text as _normalize_text
@@ -212,6 +213,14 @@ class ChatbotService:
             log_error_concise=self._log_error_concise,
         )
 
+        # Session lifecycle + history persistence collaborator
+        self._sessions = SessionManager(
+            config_provider=lambda: self.config,
+            logger=self.logger,
+            log_process_step=self._log_process_step,
+            log_error_concise=self._log_error_concise,
+        )
+
     def _get_heading_context(self, limit: Optional[int] = 200) -> Dict[str, Any]:
         """Get and cache heading context (titles/ids/parents) from database for heading-first prompts."""
         import time
@@ -266,32 +275,7 @@ class ChatbotService:
     def get_or_create_session(
         self, session_id: str, user_id: Optional[str] = None
     ) -> Dict[str, Any]:
-        """
-        Get or create a chat session (from database)
-
-        Args:
-            session_id: Session identifier
-            user_id: Optional user identifier
-
-        Returns:
-            Session data
-        """
-        # Get or create session in database
-        session = DatabaseService.get_or_create_chat_session(session_id, user_id)
-
-        # Check if database operation failed
-        if session is None:
-            self.logger.error(
-                f"DatabaseService.get_or_create_chat_session returned None for session_id: {session_id}"
-            )
-            return {}
-
-        # Convert to dictionary format for compatibility
-        session_data = session.to_dict()
-        session_data["config"] = self.config.copy()
-        session_data["history"] = [msg.to_dict() for msg in session.messages]
-
-        return session_data
+        return self._sessions.get_or_create_session(session_id, user_id)
 
     def _get_genai_client(self):
         """Get or initialize genai client"""
@@ -1011,59 +995,16 @@ class ChatbotService:
     def _update_session_active_headings(
         self, session_id: str, active_headings: List[str], heading_info: Dict[str, Any]
     ) -> None:
-        """
-        Cập nhật active_headings trong session metadata
-
-        Args:
-            session_id: Session identifier
-            active_headings: headings hiện tại đang được nhắc tới
-            heading_info: Thông tin phân tích heading
-        """
-        try:
-            DatabaseService.update_session_metadata(
-                session_id,
-                {
-                    "active_headings": active_headings,
-                    "heading_info": heading_info,
-                    "last_heading_update": time.time(),
-                },
-            )
-            # Use concise logging instead of verbose
-            heading_preview = active_headings[0] if active_headings else "None"
-            if len(active_headings) > 1:
-                heading_preview += f" (+{len(active_headings)-1} more)"
-            self._log_process_step("Updated session headings", heading_preview)
-        except Exception as e:
-            self._log_error_concise("Session heading update", e, session_id)
+        return self._sessions.update_active_headings(
+            session_id, active_headings, heading_info
+        )
 
     def _update_session_active_entity(
         self, session_id: str, active_entity: str, entity_info: Dict[str, Any]
     ) -> None:
-        """
-        Cập nhật active_entity trong session metadata
-
-        Args:
-            session_id: Session identifier
-            active_entity: Thực thể hiện tại đang được nhắc tới
-            entity_info: Thông tin chi tiết về entities
-        """
-        try:
-            # Cập nhật active_entity trong database session
-            DatabaseService.update_session_metadata(
-                session_id,
-                {
-                    "active_entity": active_entity,
-                    "entity_info": entity_info,
-                    "last_entity_update": time.time(),
-                },
-            )
-
-            self.logger.info(
-                f"Updated active_entity for session {session_id}: {active_entity}"
-            )
-
-        except Exception as e:
-            self.logger.error(f"Error updating session active_entity: {str(e)}")
+        return self._sessions.update_active_entity(
+            session_id, active_entity, entity_info
+        )
 
     def _generate_company_info_fallback(self, question: str) -> str:
         """
@@ -1590,47 +1531,9 @@ Có vẻ như câu hỏi của bạn nằm ngoài lĩnh vực chuyên môn của
         sources: List[Dict],
         extra_metadata: Optional[Dict[str, Any]] = None,
     ):
-        """
-        Add interaction to session history in database
-
-        Args:
-            session_id: Session identifier
-            question: User question
-            answer: AI answer
-            sources: Source documents
-        """
-        try:
-            # Prepare metadata with sources
-            metadata = {
-                "sources_count": len(sources),
-                "sources": sources[:5],  # Store first 5 sources in metadata
-            }
-
-            if extra_metadata and isinstance(extra_metadata, dict):
-                try:
-                    metadata.update(extra_metadata)
-                except Exception:
-                    # Be safe; metadata should not break history persistence
-                    pass
-
-            # Add user message
-            DatabaseService.add_chat_message(
-                session_id=session_id,
-                message_type="user",
-                content=question,
-                metadata=metadata,
-            )
-
-            # Add bot message
-            DatabaseService.add_chat_message(
-                session_id=session_id,
-                message_type="bot",
-                content=answer,
-                metadata=metadata,
-            )
-
-        except Exception as e:
-            self.logger.error(f"Error adding to history: {str(e)}")
+        return self._sessions.add_to_history(
+            session_id, question, answer, sources, extra_metadata
+        )
 
     def _get_or_create_chatbot(
         self, embedded_file: Optional[str] = None
