@@ -1,6 +1,6 @@
 # RAG Chatbot Flask API - Docker Configuration
 
-FROM python:3.11-slim
+FROM python:3.13-slim
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -24,8 +24,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Create necessary directories
-RUN mkdir -p data/{raw_data,processed,uploads} logs temp chat_sessions
+# Create writable runtime directories (app also ensures these at startup).
+# Listed explicitly because /bin/sh does not expand brace patterns.
+RUN mkdir -p \
+    data/raw_data data/processed data/uploads data/embeddings \
+    output/results chat_sessions token_logs logs temp cache
 
 # Create non-root user
 RUN useradd --create-home --shell /bin/bash app && chown -R app:app /app

@@ -4,7 +4,6 @@ Provides helper functions for configuration management and validation.
 """
 
 import logging
-import os
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -75,7 +74,6 @@ def print_full_configuration() -> None:
     print("🌍 ENVIRONMENT SUMMARY:")
     print("-" * 50)
     print(f"Project Root: {PathConfig.BASE_DIR}")
-    print(f"Python Path: {PathConfig.SRC_DIR}")
     print(f"Data Location: {PathConfig.DATA_DIR}")
     print(f"Output Location: {PathConfig.OUTPUT_DIR}")
     print(

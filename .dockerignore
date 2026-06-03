@@ -1,0 +1,57 @@
+# Version control
+.git
+.gitignore
+
+# Python caches & build artifacts
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage*
+htmlcov/
+
+# Virtual environments (image builds its own)
+.venv/
+venv/
+env/
+ENV/
+
+# uv lockfile (image installs via pip + requirements.txt)
+uv.lock
+
+# Local env & secrets
+.env
+.env.*
+config.env
+config.env.*
+!config.env.example
+*.key
+*.pem
+
+# IDE / tooling
+.vscode/
+.idea/
+.claude/
+.codegraph/
+
+# Runtime / generated data (created at startup, mounted, or regenerated)
+logs/
+temp/
+cache/
+output/
+chat_sessions/
+token_logs/
+data/processed/
+data/uploads/
+data/embeddings/
+
+# Docs & tests (not needed in the runtime image)
+docs/
+tests/
+
+# OS files
+.DS_Store
+Thumbs.db

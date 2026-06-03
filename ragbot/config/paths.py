@@ -18,8 +18,7 @@ class PathConfig:
     
     # Base directories
     BASE_DIR = Path(__file__).parent.parent.parent
-    SRC_DIR = BASE_DIR / "src"
-    
+
     # Data directories
     DATA_DIR = Path(os.getenv("DATA_DIR", str(BASE_DIR / "data")))
     RAW_DATA_DIR = DATA_DIR / "raw_data"
@@ -136,7 +135,6 @@ class PathConfig:
         print("📁 PATH CONFIGURATION:")
         print("=" * 50)
         print(f"Base Directory: {cls.BASE_DIR}")
-        print(f"Source Directory: {cls.SRC_DIR}")
         print(f"Data Directory: {cls.DATA_DIR}")
         print(f"Raw Data: {cls.RAW_DATA_DIR}")
         print(f"Processed Data: {cls.PROCESSED_DATA_DIR}")
