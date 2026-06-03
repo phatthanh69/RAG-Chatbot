@@ -111,25 +111,25 @@ print(config.CHUNK_SIZE)
 ## Local Setup & Quick Start
 
 ### Prerequisites
-- Python 3.10+
-- Conda (recommended) or virtualenv.
+- Python 3.13+
+- [uv](https://docs.astral.sh/uv/) for dependency management.
 - Docker (optional) for PostgreSQL.
 
 ### Development Environment
 
 ```bash
-conda activate ai  # or your environment name
-pip install -r requirements.txt
+# Create the virtualenv and install locked dependencies (incl. dev tools)
+uv sync
 
-# Start PostgreSQL (with pgvector)
+# Optional: install the Graph-RAG feature extras (heavy: torch, neo4j, ...)
+uv sync --extra graph-rag
 
-
-# Initialize database schema
-python scripts/setup_database.py
-python scripts/import_qa_data.py  # optional Q&A seed
+# Initialize database schema (uv run executes inside the project venv)
+uv run python scripts/setup_database.py
+uv run python scripts/import_qa_data.py  # optional Q&A seed
 
 # Launch Flask API
-python run.py
+uv run python run.py
 ```
 
 ### CLI Launchers

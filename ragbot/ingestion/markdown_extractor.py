@@ -276,7 +276,7 @@ def chunk_markdown_blocks(
     Chia các block Markdown thành chunks với thông tin heading hierarchy.
     Tương tự như chunker cho PDF.
     """
-    from langchain.text_splitter import RecursiveCharacterTextSplitter
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=max_chunk_size, chunk_overlap=200, separators=["\n\n", "\n", " ", ""]

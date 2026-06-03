@@ -19,9 +19,6 @@ venv/
 env/
 ENV/
 
-# uv lockfile (image installs via pip + requirements.txt)
-uv.lock
-
 # Local env & secrets
 .env
 .env.*

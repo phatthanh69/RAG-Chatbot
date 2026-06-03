@@ -2,7 +2,7 @@ import json
 import re
 from pathlib import Path
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from ragbot.ingestion.cleaner import normalize_text
 from ragbot.config import config, paths

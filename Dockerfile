@@ -1,37 +1,49 @@
-# RAG Chatbot Flask API - Docker Configuration
+# RAG Chatbot Flask API - Docker Configuration (uv-based)
 
 FROM python:3.13-slim
 
-# Set environment variables
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV FLASK_ENV=production
-ENV PORT=5099
+# Environment
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    FLASK_ENV=production \
+    PORT=5099 \
+    # uv: compile bytecode for faster startup, copy (don't hardlink) into the venv,
+    # and place the venv OUTSIDE /app so a compose bind-mount of . doesn't shadow it.
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy \
+    UV_PROJECT_ENVIRONMENT=/opt/venv \
+    PATH="/opt/venv/bin:$PATH"
 
-# Set work directory
+# uv binary (pinned)
+COPY --from=ghcr.io/astral-sh/uv:0.11.3 /uv /uvx /bin/
+
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# System dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies from the lockfile first (cached unless deps change).
+# --frozen: fail if the lock is stale; --no-dev: skip the dev group (pytest, ...).
+# Graph-RAG extra is intentionally NOT installed (heavy torch deps); add it with
+# `uv sync --frozen --extra graph-rag` if that feature is needed.
+COPY pyproject.toml uv.lock ./
+RUN uv sync --frozen --no-dev
 
-# Copy application code
+# Application code
 COPY . .
 
-# Create writable runtime directories (app also ensures these at startup).
+# Writable runtime directories (app also ensures these at startup).
 # Listed explicitly because /bin/sh does not expand brace patterns.
 RUN mkdir -p \
     data/raw_data data/processed data/uploads data/embeddings \
     output/results chat_sessions token_logs logs temp cache
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash app && chown -R app:app /app
+# Non-root user (owns both the code and the venv)
+RUN useradd --create-home --shell /bin/bash app \
+    && chown -R app:app /app /opt/venv
 USER app
 
 # Health check
