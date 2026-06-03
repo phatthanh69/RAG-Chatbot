@@ -4,9 +4,7 @@ Handles chatbot operations and session management
 Now integrated with database storage and vector search
 """
 
-import json
 import logging
-import re
 import sys
 import time
 import traceback
@@ -22,7 +20,6 @@ try:
 
     from ragbot.chat.rag_engine import (
         EnhancedRAGChatbot,
-        RetrievalResult,
         generate_answer,
         retrieve,
     )
@@ -34,14 +31,12 @@ except ImportError as e:
     from ragbot.chat.rag_engine import (
         retrieve,
         generate_answer,
-        RetrievalResult,
         EnhancedRAGChatbot,
     )
     from ragbot.llm.client import init_genai_client
 
 from ragbot.db.database_service import DatabaseService
 from ragbot.retrieval.ensemble import EnsembleRetrieverService
-from ragbot.retrieval.vector_search import VectorSearchService
 from ragbot.chat.classification import QuestionClassifier
 from ragbot.chat.session import SessionManager
 from ragbot.chat.formatting import convert_sources_to_dict, process_single_source
